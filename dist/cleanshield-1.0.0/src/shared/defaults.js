@@ -56,6 +56,11 @@ export function createDefaultSettings() {
       blocked: [],
       allowed: [],
     },
+    google: {
+      keywords: [],
+      blocked: [],
+      enabled: true,
+    },
     customFilters: "",
     ui: {
       theme: "auto",
@@ -190,6 +195,40 @@ export function normalizeSettings(raw) {
     if (Array.isArray(raw.sites.allowed)) {
       output.sites.allowed = [...new Set(raw.sites.allowed.map(normalizeDomain).filter(Boolean))].slice(0, 1000);
     }
+  }
+
+  if (isObject(raw.google)) {
+    if (Array.isArray(raw.google.keywords)) {
+      output.google = output.google || createDefaultSettings().google;
+      const seen = new Set();
+      output.google.keywords = raw.google.keywords
+        .map((kw) => ({
+          id: typeof kw.id === "string" && kw.id ? kw.id : `gk_${Math.random().toString(36).slice(2, 10)}`,
+          text: typeof kw.text === "string" ? kw.text.slice(0, 200) : "",
+          match: ["contains", "word", "regex"].includes(kw.match) ? kw.match : "contains",
+          scopes: Array.isArray(kw.scopes) ? kw.scopes.slice(0, 20) : [],
+          caseSensitive: kw.caseSensitive === true,
+          createdAt: Number(kw.createdAt) || Date.now(),
+        }))
+        .filter((item) => {
+          const key = `${item.text.toLowerCase()}|${item.match}|${(item.scopes || []).join(",")}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+    }
+    if (Array.isArray(raw.google.blocked)) {
+      output.google = output.google || createDefaultSettings().google;
+      output.google.blocked = raw.google.blocked
+        .map((domain) => {
+          const d = normalizeDomain(domain);
+          return d ? { id: `gs_${Date.now().toString(36)}`, domain: d, enabled: true, note: "", createdAt: Date.now() } : null;
+        })
+        .filter(Boolean);
+    }
+    // Ensure enabled defaults to true
+    if (typeof raw.google.enabled === "boolean") output.google.enabled = raw.google.enabled;
+    else output.google.enabled = true;
   }
 
   if (typeof raw.customFilters === "string") {

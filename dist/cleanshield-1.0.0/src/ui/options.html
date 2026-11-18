@@ -28,6 +28,9 @@
           <button class="nav-item" data-tab="keywords">
             <span class="nav-ico">⌕</span><span>키워드 필터</span>
           </button>
+          <button class="nav-item" data-tab="google">
+            <span class="nav-ico">🔍</span><span>구글 검색</span>
+          </button>
           <button class="nav-item" data-tab="shortform">
             <span class="nav-ico">▤</span><span>숏폼 차단</span>
           </button>
@@ -240,6 +243,69 @@
               <h3>지원 사이트</h3>
               <p class="muted small">아래 사이트의 게시글·댓글·영상 카드에서 키워드를 찾아 숨깁니다.</p>
               <div class="chips static" id="platform-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="panel-google">
+          <article class="card form-card">
+            <div class="info-head">
+              <h3>구글 검색 결과 필터</h3>
+              <p>구글 검색 결과에서 숨길 키워드와 도메인을 설정합니다.</p>
+            </div>
+            <form id="google-form" class="keyword-form">
+              <div class="keyword-main">
+                <input id="google-keyword-input" type="text" placeholder="차단할 키워드" autocomplete="off" maxlength="200" />
+                <select id="google-keyword-match" aria-label="일치 방식">
+                  <option value="contains">포함</option>
+                  <option value="word">단어 단위</option>
+                  <option value="regex">정규식</option>
+                </select>
+                <button class="btn primary" type="submit">키워드 추가</button>
+              </div>
+              <div class="keyword-main" style="margin-top: 12px;">
+                <input id="google-domain-input" type="text" placeholder="차단할 도메인 (예: example.com)" autocomplete="off" maxlength="200" />
+                <button class="btn primary" style="margin-top: 4px; width: 100%;" type="submit">도메인 추가</button>
+              </div>
+              <div class="scope-row">
+                <span class="muted small">적용 범위</span>
+                <div class="chips" id="google-scope-chips">
+                  <span class="chip active" data-value="all">전체</span>
+                  <span class="chip" data-value="google">구글만</span>
+                </div>
+                <span class="muted small">선택하지 않으면 모든 지원 사이트에서 키워드 필터가 적용됩니다.</span>
+              </div>
+            </form>
+            <p class="error-text hidden" id="google-error"></p>
+          </article>
+
+          <article class="card list-card">
+            <div class="info-head">
+              <h3>등록된 구글 키워드 <span class="count-badge" id="google-keyword-count">0</span></h3>
+              <button class="btn small ghost" id="google-keyword-export">목록 내보내기</button>
+            </div>
+            <div class="list" id="google-keyword-list"></div>
+          </article>
+
+          <article class="card list-card">
+            <div class="info-head">
+              <h3>등록된 구글 차단 도메인 <span class="count-badge" id="google-site-count">0</span></h3>
+              <span class="muted small">토글로 개별 활성화</span>
+            </div>
+            <div class="list" id="google-site-list"></div>
+          </article>
+
+          <div class="grid two">
+            <article class="card form-card">
+              <h3>한 번에 추가</h3>
+              <p class="muted small">한 줄에 하나씩 입력하세요. 최대 200개까지 추가됩니다.</p>
+              <textarea id="google-bulk" rows="5" placeholder="스포일러&#10;광고*&#10;원하지 않는 추천"></textarea>
+              <button class="btn" id="google-bulk-add">일괄 추가</button>
+            </article>
+            <article class="card info-card">
+              <h3>지원 사이트</h3>
+              <p class="muted small">구글 검색 결과에서 키워드와 도메인이 숨겨집니다.</p>
+              <div class="chips static" id="google-platform-list"></div>
             </article>
           </div>
         </section>

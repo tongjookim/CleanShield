@@ -181,6 +181,14 @@
       textSelectors: [],
       minText: 2,
     },
+    {
+      id: "google",
+      label: "구글 검색",
+      patterns: [/(^|\.)google\.com$/],
+      items: [".g", ".g-bloks"],
+      textSelectors: ["h3", ".VwiXrf", ".yXK7lf"],
+      minText: 3,
+    },
   ];
 
   const ZERO_WIDTH = /[\u00ad\u200b-\u200f\u202a-\u202e\u2060\ufeff]/g;

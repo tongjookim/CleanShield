@@ -22,6 +22,7 @@ const TABS = {
   general: ["일반", "광고·추적기 차단 상태와 필터 정보를 확인합니다."],
   sites: ["사이트 차단", "특정 웹사이트를 차단하고 예외를 관리합니다."],
   keywords: ["키워드 필터", "SNS와 커뮤니티에서 원치 않는 게시글을 숨깁니다."],
+  google: ["구글 검색", "구글 검색 결과에서 키워드와 도메인을 필터링합니다."],
   shortform: ["숏폼 차단", "쇼츠·릴스·틱톡 같은 짧은 영상 콘텐츠를 차단합니다."],
   advanced: ["고급", "사용자 필터, 데이터 백업, 엔진 정보를 관리합니다."],
 };
@@ -298,6 +299,102 @@ function renderKeywords() {
   }
 }
 
+function renderGoogle() {
+  const google = settings.google || createDefaultSettings().google;
+  $("google-keyword-count").textContent = String(google.keywords.length);
+  $("google-site-count").textContent = String(google.blocked.length);
+
+  // Render keywords list
+  const keywordList = $("google-keyword-list");
+  keywordList.textContent = "";
+  if (!google.keywords.length) {
+    keywordList.append(
+      el("div", "empty", "등록된 구글 키워드가 없습니다. 차단할 단어를 입력해 보세요."),
+    );
+  } else {
+    for (const item of google.keywords) {
+      const row = el("div", "row");
+      row.dataset.id = item.id;
+      const main = el("div", "row-main");
+      main.append(el("div", "keyword-text", item.text));
+      const sub = el("div", "row-sub");
+      const modeLabel = item.match === "word" ? "단어" : item.match === "regex" ? "정규식" : "포함";
+      sub.append(el("span", "pill", modeLabel));
+      if (item.scopes?.length) {
+        const labels = item.scopes.slice(0, 3).map(platformLabel);
+        if (item.scopes.length > 3) labels.push(`+${item.scopes.length - 3}`);
+        sub.append(el("span", "", labels.join(", ")));
+      } else {
+        sub.append(el("span", "pill accent", "모든 사이트"));
+      }
+      main.append(sub);
+      const actions = el("div", "row-actions");
+      const remove = el("button", "icon-btn", "✕");
+      remove.type = "button";
+      remove.dataset.action = "delete-google-keyword";
+      remove.title = "키워드 삭제";
+      actions.append(remove);
+      row.append(main, actions);
+      keywordList.append(row);
+    }
+  }
+
+  // Render sites list
+  const siteList = $("google-site-list");
+  siteList.textContent = "";
+  if (!google.blocked.length) {
+    siteList.append(
+      el("div", "empty", "등록된 차단 도메인이 없습니다. 도메인을 입력해 보세요."),
+    );
+  } else {
+    for (const item of google.blocked) {
+      const row = el("div", "row");
+      row.dataset.id = item.id;
+      const main = el("div", "row-main");
+      main.append(el("div", "row-title", item.domain));
+      const sub = el("div", "row-sub");
+      sub.append(el("span", "pill", item.enabled ? "활성" : "비활성"));
+      if (item.note) sub.append(el("span", "", item.note));
+      main.append(sub);
+      const actions = el("div", "row-actions");
+      actions.append(
+        makeSwitch(item.enabled, async (checked) => {
+          await save((current) => {
+            const target = current.google.keywords.find((entry) => entry.id === item.id);
+            if (target) target.enabled = checked;
+          }, `${item.domain} 활성화`);
+          renderGoogle();
+        }, "사이트 차단 활성화"),
+      );
+      const remove = el("button", "icon-btn", "✕");
+      remove.type = "button";
+      remove.dataset.action = "delete-google-site";
+      remove.title = "차단 목록에서 삭제";
+      actions.append(remove);
+      row.append(main, actions);
+      siteList.append(row);
+    }
+  }
+}
+
+function renderGoogleScopeChips() {
+  const container = $("google-scope-chips");
+  container.textContent = "";
+  const chips = [
+    { value: "all", label: "전체", default: true },
+    { value: "google", label: "구글만" },
+  ];
+  for (const chip of chips) {
+    const label = el("label", "chip-check");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = chip.value;
+    input.checked = chip.default;
+    label.append(input, el("span", "", chip.label));
+    container.append(label);
+  }
+}
+
 function renderPlatforms() {
   const container = $("platform-cards");
   container.textContent = "";
@@ -358,6 +455,7 @@ function renderAll() {
   renderGeneral();
   renderSites();
   renderKeywords();
+  renderGoogle();
   renderPlatforms();
   renderCustom();
 }
@@ -590,7 +688,84 @@ function bindEvents() {
     renderKeywords();
   });
 
-  $("keyword-bulk-add").addEventListener("click", async () => {
+  // Google keyword form
+  $("google-form").addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const keywordText = $("google-keyword-input").value.trim();
+    const match = $("google-keyword-match").value;
+    if (!keywordText) return;
+    if (keywordText.length > 200) {
+      showError("google-error", "키워드는 200자 이내로 입력하세요.");
+      return;
+    }
+    if (match === "regex") {
+      try {
+        new RegExp(keywordText);
+      } catch {
+        showError("google-error", "정규식 문법이 올바르지 않습니다.");
+        return;
+      }
+    }
+    const scopes = [...document.querySelectorAll("#google-scope-chips input:checked")].map(
+      (input) => input.value,
+    );
+    const duplicate = (settings.google?.keywords || []).some(
+      (item) =>
+        item.text.toLowerCase() === keywordText.toLowerCase() &&
+        item.match === match &&
+        (item.scopes || []).join(",") === scopes.join(","),
+    );
+    if (duplicate) {
+      showError("google-error", "같은 조건의 키워드가 이미 있습니다.");
+      return;
+    }
+    await save((current) => {
+      current.google = current.google || createDefaultSettings().google;
+      current.google.keywords = current.google.keywords || [];
+      current.google.keywords.unshift({
+        id: `gk_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`,
+        text: keywordText,
+        match,
+        scopes,
+        caseSensitive: false,
+        createdAt: Date.now(),
+      });
+      current.google.enabled = true;
+    }, `"${keywordText}" 구글 키워드 추가`);
+    $("google-keyword-input").value = "";
+    showError("google-error", "");
+    for (const input of document.querySelectorAll("#google-scope-chips input")) input.checked = false;
+    renderGoogle();
+    renderGeneral();
+  });
+
+  $("keyword-list").addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-action='delete-keyword']");
+    if (!button) return;
+    const id = button.closest(".row")?.dataset.id;
+    const item = settings.keyword.items.find((entry) => entry.id === id);
+    if (!item) return;
+    await save((current) => {
+      current.keyword.items = current.keyword.items.filter((entry) => entry.id !== id);
+    }, `"${item.text}" 키워드 삭제`);
+    renderKeywords();
+  });
+
+  // Google site delete
+  $("google-site-list").addEventListener("click", async (event) => {
+    const button = event.target.closest("[data-action='delete-google-site']");
+    if (!button) return;
+    const id = button.closest(".row")?.dataset.id;
+    const item = (settings.google?.blocked || []).find((entry) => entry.id === id);
+    if (!item) return;
+    await save((current) => {
+      current.google = current.google || createDefaultSettings().google;
+      current.google.blocked = current.google.blocked.filter((entry) => entry.id !== id);
+    }, `${item.domain} 삭제`);
+    renderGoogle();
+  });
+
+  $("google-bulk-add").addEventListener("click", async () => {
     const lines = $("keyword-bulk")
       .value.split(/\r?\n/)
       .map((line) => line.trim())
@@ -746,6 +921,7 @@ async function init() {
   $("side-version").textContent = `v${chrome.runtime.getManifest().version}`;
   bindEvents();
   renderScopeChips();
+  renderGoogleScopeChips();
   renderAll();
   activateTab(location.hash.slice(1) || "general", false);
 }
