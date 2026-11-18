@@ -185,8 +185,30 @@
       id: "google",
       label: "구글 검색",
       patterns: [/(^|\.)google\.com$/],
-      items: [".g", ".g-bloks"],
-      textSelectors: ["h3", ".VwiXrf", ".yXK7lf"],
+      // 검색 결과 컨테이너 - 다양한 Google DOM 구조를 위해 우선순위 순으로 정렬
+      items: [
+        "div.g",                 // classic result container
+        "div.Misc .g",           // within misc container
+        "div[data-result-index]", // index-based container
+        "g-section.g",
+      ],
+      // 제목을 추출하기 위한 셀렉터 - 우선순위 순
+      textSelectors: [
+        "h3",                    // 가장 일반적인 제목 요소
+        ".VwiXrf",               // 스니펫/요약 클래스
+        ".yXK7lf",               // 알트 스니펫 클래스
+        ".Jheit",                // 결과 제목 컨테이너
+        "h3 .MBeuO",             // title within result div
+        "div[role='heading']",   // role-based heading
+        // 폴백: 링크 텍스트에서 키워드 매칭
+        "a[href] .' '",
+      ],
+      // 검색 결과 링크 직접 매칭을 위한 셀렉터 (키워드 텍스트 포함)
+      linkSelectors: [
+        'a[href^="/url?q="]',       // classic Google URL 패턴
+        'a[data-href]',              // data-href 속성 사용
+        ".g a",                      // result 내의 모든 링크
+      ],
       minText: 3,
     },
   ];
@@ -263,8 +285,9 @@
   function extractText(element, adapter) {
     if (!element) return "";
     let text = "";
+    let chunks = [];
     if (adapter && adapter.textSelectors.length) {
-      const chunks = [];
+      chunks = [];
       for (const selector of adapter.textSelectors) {
         const nodes = element.querySelectorAll(selector);
         for (const node of nodes) {
@@ -274,6 +297,21 @@
         }
       }
       text = chunks.join("\n");
+    }
+    // 폴백: Google 검색 결과 링크의 텍스트에서 키워드 매칭을 위해 추가 추출
+    if (!text.trim() && adapter && adapter.id === "google") {
+      // 검색 결과 링크에서 텍스트 추출
+      const linkNodes = element.querySelectorAll('a[href^="/url?q="]');
+      const linkTexts = [];
+      for (const node of linkNodes) {
+        const value = node.innerText || node.textContent || "";
+        if (value && value.length >= adapter.minText) {
+          linkTexts.push(value);
+        }
+      }
+      if (linkTexts.length > 0) {
+        text = linkTexts.join("\n");
+      }
     }
     if (!text.trim()) text = element.innerText || element.textContent || "";
     return normalizeText(text).slice(0, 8000);
