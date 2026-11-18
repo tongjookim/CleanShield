@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CleanShield 설정</title>
+    <link rel="stylesheet" href="ui.css" />
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand side-brand">
+          <img class="logo" src="../../icons/icon48.png" alt="" />
+          <div class="brand-copy">
+            <span class="brand-name">CleanShield</span>
+            <span class="brand-sub" id="side-version">v1.0.0</span>
+          </div>
+        </div>
+
+        <nav class="nav" aria-label="설정 섹션">
+          <button class="nav-item" data-tab="general">
+            <span class="nav-ico">◈</span><span>일반</span>
+          </button>
+          <button class="nav-item" data-tab="sites">
+            <span class="nav-ico">⊘</span><span>사이트 차단</span>
+          </button>
+          <button class="nav-item" data-tab="keywords">
+            <span class="nav-ico">⌕</span><span>키워드 필터</span>
+          </button>
+          <button class="nav-item" data-tab="shortform">
+            <span class="nav-ico">▤</span><span>숏폼 차단</span>
+          </button>
+          <button class="nav-item" data-tab="advanced">
+            <span class="nav-ico">⚙</span><span>고급</span>
+          </button>
+        </nav>
+
+        <div class="side-footer">
+          <label class="master-row">
+            <span>
+              <strong>전체 보호</strong>
+              <small id="master-label">켜짐</small>
+            </span>
+            <span class="switch"><input id="master" type="checkbox" /><span></span></span>
+          </label>
+          <p class="side-note">설정과 통계는 이 브라우저에만 저장됩니다.</p>
+        </div>
+      </aside>
+
+      <main class="main">
+        <header class="page-head">
+          <div>
+            <h1 id="page-title">일반</h1>
+            <p id="page-desc" class="muted">광고·추적기 차단 상태와 필터 정보를 확인합니다.</p>
+          </div>
+          <span class="pill accent" id="save-state">자동 저장</span>
+        </header>
+
+        <section class="panel" id="panel-general">
+          <div class="hero card">
+            <div class="hero-copy">
+              <span class="pill accent">오늘의 보호 기록</span>
+              <h2 id="hero-total">0개 차단</h2>
+              <p class="muted">
+                네트워크 광고·추적기, 숨긴 광고 요소, 키워드 게시글, 숏폼 요소, 차단 페이지를
+                합산한 값입니다. 모든 수치는 자정에 초기화됩니다.
+              </p>
+            </div>
+            <div class="hero-stats">
+              <div><b id="hero-network">0</b><span>네트워크</span></div>
+              <div><b id="hero-elements">0</b><span>요소 숨김</span></div>
+              <div><b id="hero-posts">0</b><span>키워드 글</span></div>
+              <div><b id="hero-shorts">0</b><span>숏폼</span></div>
+            </div>
+          </div>
+
+          <div class="grid two">
+            <article class="card setting-card">
+              <div class="setting-head">
+                <div>
+                  <h3>광고 차단</h3>
+                  <p>EasyList 기반의 네트워크 광고와 배너를 차단합니다.</p>
+                </div>
+                <span class="switch"><input id="set-ads" type="checkbox" /><span></span></span>
+              </div>
+              <div class="meta-row"><span class="pill" id="count-ads">규칙 불러오는 중</span></div>
+            </article>
+
+            <article class="card setting-card">
+              <div class="setting-head">
+                <div>
+                  <h3>추적기 차단</h3>
+                  <p>EasyPrivacy 기반의 분석·추적 스크립트를 차단합니다.</p>
+                </div>
+                <span class="switch"><input id="set-tracking" type="checkbox" /><span></span></span>
+              </div>
+              <div class="meta-row"><span class="pill" id="count-privacy">규칙 불러오는 중</span></div>
+            </article>
+
+            <article class="card setting-card">
+              <div class="setting-head">
+                <div>
+                  <h3>한국 사이트 필터</h3>
+                  <p>List-KR의 국내 사이트 광고·배너 규칙을 함께 적용합니다.</p>
+                </div>
+                <span class="switch"><input id="set-korean" type="checkbox" /><span></span></span>
+              </div>
+              <div class="meta-row"><span class="pill" id="count-kr">규칙 불러오는 중</span></div>
+            </article>
+
+            <article class="card setting-card">
+              <div class="setting-head">
+                <div>
+                  <h3>광고 요소 숨김</h3>
+                  <p>목록에 등록된 광고 슬롯과 스폰서 영역을 CSS로 숨깁니다.</p>
+                </div>
+                <span class="switch"><input id="set-cosmetic" type="checkbox" /><span></span></span>
+              </div>
+              <div class="meta-row"><span class="pill" id="count-cosmetic">선택자 불러오는 중</span></div>
+            </article>
+          </div>
+
+          <article class="card info-card">
+            <div class="info-head">
+              <h3>필터 목록</h3>
+              <span class="pill" id="build-date">-</span>
+            </div>
+            <p class="muted small" id="build-summary">
+              필터 규칙을 불러오는 중입니다.
+            </p>
+            <div class="license-row">
+              <span>EasyList · EasyPrivacy</span>
+              <span>List-KR</span>
+              <span>자체 키워드/숏폼 엔진</span>
+            </div>
+          </article>
+
+          <article class="card tips-card">
+            <h3>이렇게 사용하세요</h3>
+            <ul>
+              <li>웹페이지에서 텍스트를 선택하고 우클릭 → <b>CleanShield: 선택한 텍스트 차단</b>을 누르면 키워드가 바로 추가됩니다.</li>
+              <li>웹페이지 빈 곳에서 우클릭 → <b>이 사이트 차단</b>으로 현재 사이트를 목록에 넣을 수 있습니다.</li>
+              <li>차단된 사이트 화면에서 <b>5분간 허용</b>을 누르면 잠시만 접속할 수 있습니다.</li>
+            </ul>
+          </article>
+
+          <div class="danger-zone">
+            <button class="btn small danger" id="reset-stats">오늘 통계 초기화</button>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="panel-sites">
+          <div class="grid two">
+            <article class="card form-card">
+              <h3>사이트 추가</h3>
+              <p class="muted small">도메인만 입력하세요. 하위 도메인도 함께 차단됩니다.</p>
+              <form id="site-form" class="inline-form">
+                <input id="site-input" type="text" placeholder="example.com" autocomplete="off" />
+                <button class="btn primary" type="submit">차단 추가</button>
+              </form>
+              <p class="error-text hidden" id="site-error"></p>
+              <div class="presets">
+                <span class="muted small">빠른 추가</span>
+                <button class="chip" data-preset="sns">SNS 묶음</button>
+                <button class="chip" data-preset="shortform">틱톡</button>
+                <button class="chip" data-preset="community">커뮤니티</button>
+              </div>
+            </article>
+
+            <article class="card form-card">
+              <h3>허용 목록</h3>
+              <p class="muted small">차단 목록보다 우선합니다. 하위 도메인도 함께 허용됩니다.</p>
+              <form id="allow-form" class="inline-form">
+                <input id="allow-input" type="text" placeholder="example.com" autocomplete="off" />
+                <button class="btn" type="submit">허용 추가</button>
+              </form>
+              <p class="error-text hidden" id="allow-error"></p>
+              <p class="muted small">허용한 사이트는 광고 차단은 유지되지만 사이트 차단은 적용되지 않습니다.</p>
+            </article>
+          </div>
+
+          <article class="card list-card">
+            <div class="info-head">
+              <h3>차단한 사이트 <span class="count-badge" id="site-count">0</span></h3>
+              <span class="muted small">토글로 개별 활성화</span>
+            </div>
+            <div class="list" id="site-list"></div>
+          </article>
+
+          <article class="card list-card">
+            <div class="info-head">
+              <h3>허용한 사이트 <span class="count-badge" id="allow-count">0</span></h3>
+            </div>
+            <div class="list compact" id="allow-list"></div>
+          </article>
+        </section>
+
+        <section class="panel hidden" id="panel-keywords">
+          <article class="card form-card">
+            <div class="info-head">
+              <h3>키워드 추가</h3>
+              <label class="switch"><input id="keyword-enabled" type="checkbox" /><span></span></label>
+            </div>
+            <form id="keyword-form" class="keyword-form">
+              <div class="keyword-main">
+                <input id="keyword-input" type="text" placeholder="차단할 단어 또는 문장" autocomplete="off" maxlength="200" />
+                <select id="keyword-match" aria-label="일치 방식">
+                  <option value="contains">포함</option>
+                  <option value="word">단어 단위</option>
+                  <option value="regex">정규식</option>
+                </select>
+                <button class="btn primary" type="submit">추가</button>
+              </div>
+              <div class="scope-row">
+                <span class="muted small">적용 사이트</span>
+                <div class="chips" id="scope-chips"></div>
+                <span class="muted small">선택하지 않으면 모든 지원 사이트에 적용됩니다.</span>
+              </div>
+            </form>
+            <p class="error-text hidden" id="keyword-error"></p>
+          </article>
+
+          <article class="card list-card">
+            <div class="info-head">
+              <h3>등록된 키워드 <span class="count-badge" id="keyword-count">0</span></h3>
+              <button class="btn small ghost" id="keyword-export">목록 내보내기</button>
+            </div>
+            <div class="list" id="keyword-list"></div>
+          </article>
+
+          <div class="grid two">
+            <article class="card form-card">
+              <h3>한 번에 추가</h3>
+              <p class="muted small">한 줄에 하나씩 입력하세요. 최대 200개까지 추가됩니다.</p>
+              <textarea id="keyword-bulk" rows="5" placeholder="스포일러&#10;관심 없는 추천&#10;특정 문구"></textarea>
+              <button class="btn" id="keyword-bulk-add">일괄 추가</button>
+            </article>
+            <article class="card info-card">
+              <h3>지원 사이트</h3>
+              <p class="muted small">아래 사이트의 게시글·댓글·영상 카드에서 키워드를 찾아 숨깁니다.</p>
+              <div class="chips static" id="platform-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section class="panel hidden" id="panel-shortform">
+          <article class="card setting-card">
+            <div class="setting-head">
+              <div>
+                <h3>숏폼 차단</h3>
+                <p>쇼츠·릴스·틱톡 같은 짧은 영상 콘텐츠를 숨기거나 일반 페이지로 돌립니다.</p>
+              </div>
+              <span class="switch"><input id="set-shortform" type="checkbox" /><span></span></span>
+            </div>
+          </article>
+
+          <div class="grid two" id="platform-cards"></div>
+
+          <article class="card info-card">
+            <h3>동작 방식</h3>
+            <ul>
+              <li><b>숨기기</b>는 피드·사이드바의 숏폼 선반과 링크를 CSS로 감춥니다.</li>
+              <li><b>일반 페이지로 돌리기</b>는 <code>/shorts/</code>, <code>/reels/</code> 주소를 일반 주소로 바꿉니다. 유튜브는 해당 영상의 일반 시청 페이지로 이동합니다.</li>
+              <li><b>틱톡 차단 화면</b>은 틱톡 전체에 휴식 화면을 띄웁니다. 필요하면 5분간 잠시 볼 수 있습니다.</li>
+            </ul>
+          </article>
+        </section>
+
+        <section class="panel hidden" id="panel-advanced">
+          <article class="card form-card">
+            <h3>사용자 필터</h3>
+            <p class="muted small">
+              Adblock Plus 형식의 네트워크·숨김 필터를 직접 추가할 수 있습니다. 지원하지 않는
+              옵션은 저장 시 알려드립니다.
+            </p>
+            <textarea id="custom-filters" rows="9" spellcheck="false" placeholder="||ads.example.com^$script,third-party&#10;@@||example.com^$document&#10;example.com##.sponsored-slot&#10;##.ad-banner"></textarea>
+            <div class="form-actions">
+              <button class="btn primary" id="custom-save">저장 및 적용</button>
+              <button class="btn" id="custom-check">검사</button>
+              <span class="muted small" id="custom-result"></span>
+            </div>
+          </article>
+
+          <div class="grid two">
+            <article class="card form-card">
+              <h3>데이터 내보내기</h3>
+              <p class="muted small">설정, 차단 목록, 키워드, 숏폼 설정을 JSON 파일로 저장합니다.</p>
+              <button class="btn" id="export-data">JSON 내보내기</button>
+            </article>
+            <article class="card form-card">
+              <h3>데이터 가져오기</h3>
+              <p class="muted small">이전에 내보낸 JSON 파일을 불러옵니다.</p>
+              <input type="file" id="import-file" accept="application/json" class="file-input" />
+            </article>
+          </div>
+
+          <article class="card info-card">
+            <div class="info-head">
+              <h3>엔진 정보</h3>
+              <span class="pill" id="engine-version">-</span>
+            </div>
+            <dl class="kv">
+              <dt>네트워크 규칙</dt><dd id="engine-network">-</dd>
+              <dt>숨김 선택자</dt><dd id="engine-cosmetic">-</dd>
+              <dt>사용자 규칙</dt><dd id="engine-custom">-</dd>
+              <dt>필터 빌드</dt><dd id="engine-date">-</dd>
+            </dl>
+            <p class="muted small">
+              번들 필터는 빌드 시점에 생성됩니다. 새 목록을 적용하려면 저장소에서
+              <code>python3 tools/build_rules.py</code>를 실행한 뒤 확장을 다시 로드하세요.
+            </p>
+          </article>
+
+          <article class="card danger-card">
+            <div>
+              <h3>모든 설정 초기화</h3>
+              <p class="muted small">차단 목록, 키워드, 사용자 필터와 통계가 모두 삭제됩니다.</p>
+            </div>
+            <button class="btn danger" id="reset-all">초기화</button>
+          </article>
+        </section>
+      </main>
+    </div>
+    <div class="toast" id="toast"></div>
+    <script type="module" src="options.js"></script>
+  </body>
+</html>

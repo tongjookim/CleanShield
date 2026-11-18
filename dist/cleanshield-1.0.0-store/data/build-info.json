@@ -1,0 +1,55 @@
+{
+  "generated": "2026-11-18T00:18:03Z",
+  "total_network_rules": 25888,
+  "rulesets": [
+    {
+      "name": "ads",
+      "rules": 17500,
+      "exceptions": 541,
+      "files": [
+        "easylist.txt"
+      ],
+      "skipped": {
+        "unsupported": 27950,
+        "duplicate": 9
+      }
+    },
+    {
+      "name": "privacy",
+      "rules": 7500,
+      "exceptions": 854,
+      "files": [
+        "easyprivacy.txt"
+      ],
+      "skipped": {
+        "unsupported": 82,
+        "duplicate": 3
+      }
+    },
+    {
+      "name": "kr",
+      "rules": 888,
+      "exceptions": 42,
+      "files": [
+        "kr_specific_URL.txt",
+        "kr_general_url.txt",
+        "kr_allowlist.txt"
+      ],
+      "skipped": {
+        "unsupported": 241
+      }
+    }
+  ],
+  "cosmetic": {
+    "generic": 5000,
+    "domain_selectors": 17629,
+    "domains": 8259,
+    "skipped": {
+      "skipped": 53975,
+      "selectors": 25038,
+      "generic_capped": 8689
+    }
+  },
+  "filter_lists_sha256": "43f31bc8ad0bef0f",
+  "manifest_version": "1.0.0"
+}

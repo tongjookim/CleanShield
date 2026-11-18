@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>사이트 차단 — CleanShield</title>
+    <link rel="stylesheet" href="blocked.css" />
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card">
+        <div class="brand">
+          <img src="../../icons/icon128.png" alt="" class="logo" />
+          <span>CleanShield</span>
+        </div>
+
+        <div class="art" aria-hidden="true">
+          <div class="ring"></div>
+          <div class="shield">⊘</div>
+        </div>
+
+        <h1 id="title">이 사이트는 차단되었습니다</h1>
+        <p class="host" id="host">example.com</p>
+        <p class="reason" id="reason">
+          차단 목록에 등록된 사이트입니다. 필요하면 아래에서 잠시 허용하거나 차단을 해제하세요.
+        </p>
+
+        <div class="actions">
+          <button class="btn primary" id="temp-allow">5분간 허용</button>
+          <button class="btn" id="unblock">차단 해제</button>
+        </div>
+        <div class="secondary">
+          <button class="link" id="settings">차단 설정 열기</button>
+          <span class="sep">·</span>
+          <button class="link" id="back">이전 페이지로</button>
+        </div>
+
+        <p class="error hidden" id="error"></p>
+
+        <footer>
+          <span>광고·숏폼·키워드 차단</span>
+          <span id="version"></span>
+        </footer>
+      </section>
+    </main>
+    <script type="module" src="blocked.js"></script>
+  </body>
+</html>

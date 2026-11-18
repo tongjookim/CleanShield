@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>CleanShield</title>
+    <link rel="stylesheet" href="ui.css" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="popup">
+      <header class="top">
+        <div class="brand">
+          <img class="logo" src="../../icons/icon48.png" alt="" />
+          <div class="brand-copy">
+            <span class="brand-name">CleanShield</span>
+            <span class="brand-sub" id="protection-label">실시간 보호 중</span>
+          </div>
+        </div>
+        <label class="switch" title="전체 켜기/끄기">
+          <input id="master" type="checkbox" />
+          <span></span>
+        </label>
+      </header>
+
+      <section class="site-card" id="site-card">
+        <div class="site-head">
+          <img id="site-icon" class="site-icon" src="../../icons/icon32.png" alt="" />
+          <div class="site-copy">
+            <strong id="site-host">페이지 확인 중…</strong>
+            <span class="small" id="site-status">잠시만 기다려 주세요</span>
+          </div>
+          <span class="dot" id="site-dot"></span>
+        </div>
+        <div class="site-actions">
+          <button class="btn small" id="site-block">이 사이트 차단</button>
+          <button class="btn small ghost" id="site-allow">허용</button>
+        </div>
+      </section>
+
+      <section class="stats">
+        <div class="stat">
+          <b id="stat-network">0</b>
+          <span>광고·추적기</span>
+        </div>
+        <div class="stat">
+          <b id="stat-posts">0</b>
+          <span>키워드 글</span>
+        </div>
+        <div class="stat">
+          <b id="stat-shorts">0</b>
+          <span>숏폼 요소</span>
+        </div>
+        <div class="stat">
+          <b id="stat-sites">0</b>
+          <span>차단 페이지</span>
+        </div>
+      </section>
+      <div class="today-row">
+        <span class="small muted" id="today-label">오늘의 차단</span>
+        <span class="pill accent" id="total-label">0</span>
+      </div>
+
+      <section class="toggles" id="toggles">
+        <label class="toggle-row">
+          <span class="toggle-copy">
+            <strong>광고 차단</strong>
+            <small>EasyList 기반 네트워크 광고</small>
+          </span>
+          <span class="switch"><input id="toggle-ads" type="checkbox" /><span></span></span>
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-copy">
+            <strong>추적기 차단</strong>
+            <small>EasyPrivacy 기반 추적 스크립트</small>
+          </span>
+          <span class="switch"><input id="toggle-tracking" type="checkbox" /><span></span></span>
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-copy">
+            <strong>키워드 필터</strong>
+            <small>SNS·커뮤니티 게시글 숨기기</small>
+          </span>
+          <span class="switch"><input id="toggle-keyword" type="checkbox" /><span></span></span>
+        </label>
+        <label class="toggle-row">
+          <span class="toggle-copy">
+            <strong>숏폼 차단</strong>
+            <small>쇼츠·릴스·틱톡 숨기기</small>
+          </span>
+          <span class="switch"><input id="toggle-shortform" type="checkbox" /><span></span></span>
+        </label>
+      </section>
+
+      <footer class="bottom">
+        <button class="btn ghost small" id="open-options">⚙ 설정</button>
+        <button class="btn ghost small" id="open-keywords">키워드 관리</button>
+        <span class="ver" id="version"></span>
+      </footer>
+    </div>
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>
